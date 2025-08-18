@@ -19,29 +19,33 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 👇 Add these three import steps here
-      - name: Import existing RG (idempotent)
+      # Init once, with remote backend config
+      - name: Terraform Init (remote backend)
         run: |
-          set -e
-          terraform init
+          terraform init -input=false -no-color \
+            -backend-config="resource_group_name=ead-tfstaterg" \
+            -backend-config="storage_account_name=eadtfstate29997" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=ead-infra.tfstate"
+
+      - name: Import existing RG
+        run: |
           terraform state show azurerm_resource_group.rg >/dev/null 2>&1 || \
             terraform import azurerm_resource_group.rg "/subscriptions/c8f13856-1f47-48f4-8103-70800f932e11/resourceGroups/ead-rg"
 
-      - name: Import existing random (so ACR name matches)
+      - name: Import existing random (matches ACR suffix)
         run: |
-          # remove any newly-created random from a previous failed apply in this run
           terraform state rm random_integer.rand >/dev/null 2>&1 || true
           terraform import random_integer.rand 6823
 
-      - name: Import existing ACR (idempotent)
+      - name: Import existing ACR
         run: |
           terraform state show azurerm_container_registry.acr >/dev/null 2>&1 || \
             terraform import azurerm_container_registry.acr "/subscriptions/c8f13856-1f47-48f4-8103-70800f932e11/resourceGroups/ead-rg/providers/Microsoft.ContainerRegistry/registries/eadacr6823"
 
-      # then proceed as normal
       - name: Terraform Plan
-        run: terraform plan -out plan.out
+        run: terraform plan -input=false -no-color -out plan.out
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve plan.out
+        run: terraform apply -input=false -no-color -auto-approve plan.out
