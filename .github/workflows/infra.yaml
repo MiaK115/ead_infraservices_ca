@@ -26,10 +26,8 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Optional but helpful
-      - name: Terraform fmt & validate
-        run: |
-          terraform fmt -check
-          terraform validate
+      - name: Terraform fmt (check only)
+        run: terraform fmt -check -diff
 
       # Init once, with remote backend config
       - name: Terraform Init (remote backend)

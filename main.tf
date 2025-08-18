@@ -24,8 +24,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name       = "nodepool1"
-    node_count = 2             # reduced to fit vCPU quota
-    vm_size = "Standard_B2ms"
+    node_count = 2 # reduced to fit vCPU quota
+    vm_size    = "Standard_B2ms"
   }
 
   identity { type = "SystemAssigned" }

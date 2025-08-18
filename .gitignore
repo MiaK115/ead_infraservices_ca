@@ -1,0 +1,33 @@
+# Local .terraform directories (provider plugins, caches)
+**/.terraform/*
+
+# State & lock files (we use remote state)
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Plans
+*.tfplan
+*.plan
+plan.out
+
+# Sensitive/local vars
+*.tfvars
+*.tfvars.json
+
+# Local overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI config
+.terraformrc
+terraform.rc
+
+# Keep the lock file in git (this line is optional; the lock file isn’t matched above anyway)
+!.terraform.lock.hcl
