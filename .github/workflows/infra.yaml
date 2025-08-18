@@ -1,0 +1,21 @@
+name: infra-apply
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ '**/*.tf' ]
+
+jobs:
+  tf:
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: azure/login@v2
+        with: { creds: ${{ secrets.AZURE_CREDENTIALS }} }
+      - name: Terraform Init/Plan
+        run: terraform init && terraform plan -out plan.out
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve plan.out
