@@ -11,7 +11,10 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled       = false
 }
 
-resource "random_integer" "rand" { min = 1000 max = 9999 }
+resource "random_integer" "rand" {
+   min = 1000
+   max = 9999
+}
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${var.name_prefix}-aks"
