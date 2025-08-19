@@ -3,13 +3,8 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
-resource "random_integer" "rand" {
-  min = 1000
-  max = 9999
-}
-
 resource "azurerm_container_registry" "acr" {
-  name                = "${var.name_prefix}acr${random_integer.rand.result}"
+  name                = "eadacr5320" 
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Basic"
@@ -32,8 +27,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   role_based_access_control_enabled = true
 }
 
+
+# Let AKS pull from ACR
 resource "azurerm_role_assignment" "aks_pull_acr" {
   principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
   role_definition_name = "AcrPull"
   scope                = azurerm_container_registry.acr.id
 }
+
+output "rg"   { value = azurerm_resource_group.rg.name }
+output "aks"  { value = azurerm_kubernetes_cluster.aks.name }
+output "acr"  { value = azurerm_container_registry.acr.name }
