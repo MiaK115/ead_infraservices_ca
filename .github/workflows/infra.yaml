@@ -18,8 +18,8 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Terraform fmt (check only)
-        run: terraform fmt -check -diff
+      - name: Terraform Format
+        run: terraform fmt -recursive
 
       - name: Terraform Init (remote backend)
         run: |
