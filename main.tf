@@ -34,7 +34,3 @@ resource "azurerm_role_assignment" "aks_pull_acr" {
   role_definition_name = "AcrPull"
   scope                = azurerm_container_registry.acr.id
 }
-
-output "rg"   { value = azurerm_resource_group.rg.name }
-output "aks"  { value = azurerm_kubernetes_cluster.aks.name }
-output "acr"  { value = azurerm_container_registry.acr.name }
